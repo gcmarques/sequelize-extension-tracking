@@ -19,28 +19,31 @@ const enhanceTracking = require('sequelize-extension-tracking');
 
 const sequelize = new Sequelize(...);
 
-const Project = sequelize.define('project', {
+const db = {};
+db.Project = sequelize.define('project', {
   name: DataTypes.STRING(255),
 }, { 
   history: true 
 });
-const Task = sequelize.define('project', {
+db.Task = sequelize.define('task', {
   name: DataTypes.STRING(255),
 }, { 
   history: false 
 });
-const User = sequelize.define('project', {
+db.User = sequelize.define('user', {
   username: DataTypes.STRING(255),
 }, { 
   history: false 
 });
-Task.belongsTo(Project);
-User.belongsToMany(Project, { through: 'userProjects' });
-Project.belongsToMany(User, { through: 'userProjects', extendHistory: true });
-Project.hasMany(Task, { extendHistory: true });
+db.Task.belongsTo(Project);
+db.User.belongsToMany(Project, { through: 'userProjects' });
+db.Project.belongsToMany(User, { through: 'userProjects', extendHistory: true });
+db.Project.hasMany(Task, { extendHistory: true });
 
 extendSequelize(db, {
-  tracking: enhanceTracking({ log: console.log }),
+  tracking: enhanceTracking({
+    log: logs => console.log(logs),
+  }),
 });
 
 const project = await Project.create({ name: 'My Project' });
@@ -72,6 +75,68 @@ const task = await Task.create({ name: 'Test', projectId: 1 });
 //     after: { tasks: [{ id: 1, name: 'Test'}] }
 //   ...
 // ]
+```
+
+### Logging in the database
+```javascript
+const Sequelize = require('sequelize');
+const extendSequelize = require('sequelize-extension');
+const enhanceTracking = require('sequelize-extension-tracking');
+
+const sequelize = new Sequelize(...);
+
+const db = {};
+db.Log = sequelize.define('log', {
+  id: {
+    allowNull: false,
+    autoIncrement: true,
+    primaryKey: true,
+    type: DataTypes.BIGINT,
+  },
+  type: {
+    allowNull: false,
+    type: DataTypes.ENUM('UPDATE', 'ERROR', 'REQUEST', 'DELETE'),
+  },
+  reference: {
+    allowNull: true,
+    type: DataTypes.STRING(64),
+  },
+  data: {
+    allowNull: false,
+    type: DataTypes.TEXT,
+  },
+  executionTime: {
+    allowNull: true,
+    type: DataTypes.FLOAT,
+  },
+  createdAt: {
+    allowNull: true,
+    type: DataTypes.DATE,
+  },
+}, {
+  timestamps: true,
+  updatedAt: false,
+  tableName: 'logs',
+  freezeTableName: true,
+  history: false, // make sure the logging table has no history
+});
+
+db.Log.log = async function log(values, options) {
+  values.forEach((v) => {
+    v.data = JSON.stringify(v.data);
+  });
+  return this.bulkCreate(values, { transaction: options.transaction });
+};
+
+// ...
+
+extendSequelize(db, {
+  tracking: enhanceTracking({
+    log: async (logs, options) => {
+      return db.Log.log(logs, { transaction: options.transaction });
+    },
+  }),
+});
 ```
 
 
