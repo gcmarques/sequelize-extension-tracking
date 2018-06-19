@@ -13,6 +13,12 @@ $ npm install --save sequelize-extension-tracking
 
 This library uses [sequelize-extension](https://www.npmjs.com/package/sequelize-extension) to add tracking to sequelize instance updates. You can define what models will be tracked using the option `history` and you can define what associated fields will be tracked using `extendHistory` option when creating the association. `extendHistory` is `false` by default.
 ```javascript
+const Sequelize = require('sequelize');
+const extendSequelize = require('sequelize-extension');
+const enhanceTracking = require('sequelize-extension-tracking');
+
+const sequelize = new Sequelize(...);
+
 const Project = sequelize.define('project', {
   name: DataTypes.STRING(255),
 }, { 
@@ -34,7 +40,7 @@ Project.belongsToMany(User, { through: 'userProjects', extendHistory: true });
 Project.hasMany(Task, { extendHistory: true });
 
 extendSequelize(db, {
-  tracking: { log: console.log }
+  tracking: enhanceTracking({ log: console.log }),
 });
 
 const project = await Project.create({ name: 'My Project' });
@@ -70,7 +76,7 @@ const task = await Task.create({ name: 'Test', projectId: 1 });
 
 
 ### Other Extensions
-[sequelize-extension-createdBy](https://www.npmjs.com/package/sequelize-extension-createdBy) - Automatically set createdBy with user.id option.\
-[sequelize-extension-updatedBy](https://www.npmjs.com/package/sequelize-extension-updatedBy) - Automatically set updatedBy with user.id option.\
-[sequelize-extension-deletedBy](https://www.npmjs.com/package/sequelize-extension-deletedBy) - Automatically set deletedBy with user.id option.\
+[sequelize-extension-createdBy](https://www.npmjs.com/package/sequelize-extension-createdBy) - Automatically set `createdBy` with `options.user.id` option.\
+[sequelize-extension-updatedBy](https://www.npmjs.com/package/sequelize-extension-updatedBy) - Automatically set `updatedBy` with `options.user.id` option.\
+[sequelize-extension-deletedBy](https://www.npmjs.com/package/sequelize-extension-deletedBy) - Automatically set `deletedBy` with `options.user.id` option.\
 [sequelize-extension-graphql](https://www.npmjs.com/package/sequelize-extension-graphql) - Create GraphQL schema based on sequelize models.
