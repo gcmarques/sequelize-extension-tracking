@@ -141,7 +141,7 @@ extendSequelize(db, {
 
 
 ### Other Extensions
-[sequelize-extension-createdBy](https://www.npmjs.com/package/sequelize-extension-createdBy) - Automatically set `createdBy` with `options.user.id` option.\
-[sequelize-extension-updatedBy](https://www.npmjs.com/package/sequelize-extension-updatedBy) - Automatically set `updatedBy` with `options.user.id` option.\
-[sequelize-extension-deletedBy](https://www.npmjs.com/package/sequelize-extension-deletedBy) - Automatically set `deletedBy` with `options.user.id` option.\
+[sequelize-extension-createdby](https://www.npmjs.com/package/sequelize-extension-createdby) - Automatically set `createdBy` with `options.user.id` option.\
+[sequelize-extension-updatedby](https://www.npmjs.com/package/sequelize-extension-updatedby) - Automatically set `updatedBy` with `options.user.id` option.\
+[sequelize-extension-deletedby](https://www.npmjs.com/package/sequelize-extension-deletedby) - Automatically set `deletedBy` with `options.user.id` option.\
 [sequelize-extension-graphql](https://www.npmjs.com/package/sequelize-extension-graphql) - Create GraphQL schema based on sequelize models.
