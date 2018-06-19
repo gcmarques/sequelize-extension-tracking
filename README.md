@@ -21,17 +21,17 @@ const sequelize = new Sequelize(...);
 
 const db = {};
 db.Project = sequelize.define('project', {
-  name: DataTypes.STRING(255),
+  name: Sequelize.STRING(255),
 }, { 
   history: true 
 });
 db.Task = sequelize.define('task', {
-  name: DataTypes.STRING(255),
+  name: Sequelize.STRING(255),
 }, { 
   history: false 
 });
 db.User = sequelize.define('user', {
-  username: DataTypes.STRING(255),
+  username: Sequelize.STRING(255),
 }, { 
   history: false 
 });
@@ -91,27 +91,27 @@ db.Log = sequelize.define('log', {
     allowNull: false,
     autoIncrement: true,
     primaryKey: true,
-    type: DataTypes.BIGINT,
+    type: Sequelize.BIGINT,
   },
   type: {
     allowNull: false,
-    type: DataTypes.ENUM('UPDATE', 'ERROR', 'REQUEST', 'DELETE'),
+    type: Sequelize.ENUM('UPDATE', 'ERROR', 'REQUEST', 'DELETE'),
   },
   reference: {
     allowNull: true,
-    type: DataTypes.STRING(64),
+    type: Sequelize.STRING(64),
   },
   data: {
     allowNull: false,
-    type: DataTypes.TEXT,
+    type: Sequelize.TEXT,
   },
   executionTime: {
     allowNull: true,
-    type: DataTypes.FLOAT,
+    type: Sequelize.FLOAT,
   },
   createdAt: {
     allowNull: true,
-    type: DataTypes.DATE,
+    type: Sequelize.DATE,
   },
 }, {
   timestamps: true,
