@@ -1,6 +1,6 @@
 # sequelize-extension-tracking
 
-[![Build Status](https://travis-ci.org/gcmarques/sequelize-extension.svg?branch=master)](https://travis-ci.org/gcmarques/sequelize-extension-tracking)
+[![Build Status](https://travis-ci.org/gcmarques/sequelize-extension-tracking.svg?branch=master)](https://travis-ci.org/gcmarques/sequelize-extension-tracking)
 [![codecov](https://codecov.io/gh/gcmarques/sequelize-extension/branch/master/graph/badge.svg)](https://codecov.io/gh/gcmarques/sequelize-extension-tracking)
 ![GitHub license](https://img.shields.io/github/license/gcmarques/sequelize-extension-tracking.svg)
 
@@ -70,7 +70,7 @@ const task = await Task.create({ name: 'Test', projectId: 1 });
 
 
 ### Other Extensions
-[sequelize-extension-createdBy](https://www.npmjs.com/package/sequelize-extension-createdBy)
-[sequelize-extension-updatedBy](https://www.npmjs.com/package/sequelize-extension-createdBy)
-[sequelize-extension-deletedBy](https://www.npmjs.com/package/sequelize-extension-createdBy)
-[sequelize-extension-graphql](https://www.npmjs.com/package/sequelize-extension-createdBy)
+[sequelize-extension-createdBy](https://www.npmjs.com/package/sequelize-extension-createdBy) - Automatically set createdBy with user.
+[sequelize-extension-updatedBy](https://www.npmjs.com/package/sequelize-extension-updatedBy) - Automatically set updatedBy with user.id option.
+[sequelize-extension-deletedBy](https://www.npmjs.com/package/sequelize-extension-deletedBy) - Automatically set deletedBy with user.id option.
+[sequelize-extension-graphql](https://www.npmjs.com/package/sequelize-extension-graphql) - Create GraphQL schema based on sequelize models.
