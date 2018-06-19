@@ -46,7 +46,7 @@ extendSequelize(db, {
   }),
 });
 
-const project = await Project.create({ name: 'My Project' });
+const project = await db.Project.create({ name: 'My Project' });
 // [
 //   type: 'UPDATE',
 //   reference: 'project-1',
@@ -58,7 +58,7 @@ const project = await Project.create({ name: 'My Project' });
 //   },
 //   executionTime: 1000 (nanoseconds)
 // ]
-const user = await User.create({ username: 'gabriel@test.com' });
+const user = await db.User.create({ username: 'gabriel@test.com' });
 await project.addUser(user);
 // [
 //   reference: 'project-1',
@@ -67,7 +67,7 @@ await project.addUser(user);
 //     after: { users: [{ id: 1, username: 'gabriel@test.com' }] }
 //   ...
 // ]
-const task = await Task.create({ name: 'Test', projectId: 1 });
+const task = await db.Task.create({ name: 'Test', projectId: 1 });
 // [
 //   reference: 'project-1',
 //   ...
@@ -133,7 +133,7 @@ db.Log.log = async function log(values, options) {
 extendSequelize(db, {
   tracking: enhanceTracking({
     log: async (logs, options) => {
-      return db.Log.log(logs, { transaction: options.transaction });
+      return db.Log.log(logs, options);
     },
   }),
 });
