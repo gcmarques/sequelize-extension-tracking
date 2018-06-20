@@ -939,6 +939,7 @@ function enhanceModel(model, hooks, settings) {
 
 function enhanceTracking(_options) {
   return function enhance(db, hooks, settings) {
+    /* eslint-disable-next-line */
     utils = settings.utils;
     const options = _.extend({}, settings, _options);
     _.each(db, (model) => {
@@ -946,7 +947,7 @@ function enhanceTracking(_options) {
         enhanceModel(model, hooks, options);
       }
     });
-  }
+  };
 }
 
 module.exports = enhanceTracking;
