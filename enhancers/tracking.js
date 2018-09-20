@@ -43,6 +43,33 @@ function getVisibleAttributes(model) {
   ));
 }
 
+function differentKeys(obj1, obj2) {
+  const keys = {};
+  _.each(obj1, (v, key) => {
+    if (!_.isEqual(v, obj2[key])) {
+      keys[key] = 1;
+    }
+  });
+  _.each(obj2, (v, key) => {
+    if (!_.isEqual(v, obj1[key])) {
+      keys[key] = 1;
+    }
+  });
+  return _.keys(keys);
+}
+
+function pick(obj, keys) {
+  const result = {};
+  _.each(keys, (key) => {
+    if (_.has(obj, key)) {
+      result[key] = obj[key];
+    } else {
+      result[key] = '';
+    }
+  });
+  return result;
+}
+
 const SETTER = /^(add|set|remove)/;
 function isSetter(options) {
   const trigger = utils.getTriggerType(options);
@@ -174,14 +201,17 @@ async function _wrappedAfterUpdate(self, options, model, name, attributes, log) 
   if (trackingKey) {
     const trigger = utils.getTriggerType(options);
     const destroyed = trigger === 'DESTROY' || trigger === 'BULKDESTROY';
+    const safeBefore = safe(_.pick(before, attributes), model);
+    const safeAfter = safe(_.pick(after, attributes), model);
+    const keys = differentKeys(safeBefore, safeAfter);
     await log([{
       type: destroyed ? 'DELETE' : 'UPDATE',
       reference: `${name}-${self.id}`,
       data: {
         type: name,
         id: self.id,
-        before: safe(_.pick(before, attributes), model),
-        after: safe(_.pick(after, attributes), model),
+        before: pick(safeBefore, keys),
+        after: pick(safeAfter, keys),
       },
       executionTime: end(trackingKey).nanoseconds,
       userId: options.user.id,
