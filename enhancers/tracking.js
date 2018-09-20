@@ -108,7 +108,7 @@ function getScope(model, association) {
       as,
       attributes,
     });
-    const instance = await model.find(params);
+    const instance = await model.findOne(params);
     // if (!instance) {
     //   throw new Error(`Associated object not found: ${utils.getName(target)} -> ${name}-${id}`);
     // }
