@@ -232,16 +232,16 @@ function afterBulkCreate(model, log) {
 }
 
 function beforeBulkUpdate(model) {
-  const sequelize = utils.getSequelize(model);
+  // const sequelize = utils.getSequelize(model);
   return async function wrappedBeforeBulkUpdate(options) {
     if (isSetter(options)) {
       return;
     }
-    if (!options.transaction) {
-      const transaction = await sequelize.transaction();
-      options.transaction = transaction;
-      utils.setTriggerParams(options, getGlobalKey(model), { transaction });
-    }
+    // if (!options.transaction) {
+    //   const transaction = await sequelize.transaction();
+    //   options.transaction = transaction;
+    //   utils.setTriggerParams(options, getGlobalKey(model), { transaction });
+    // }
     const instances = await utils.getBulkedInstances(model, options);
     for (let i = 0; i < instances.length; i += 1) {
       setScopeKey(model, options, i);
@@ -261,15 +261,15 @@ function afterBulkUpdate(model, log) {
       return;
     }
     const instances = await utils.getBulkedInstances(model, options);
-    const { transaction } = utils.getTriggerParams(options, getGlobalKey(model));
-    if (transaction) {
-      try {
-        await transaction.commit();
-      } catch (err) {
-        await transaction.rollback();
-        throw err;
-      }
-    }
+    // const { transaction } = utils.getTriggerParams(options, getGlobalKey(model));
+    // if (transaction) {
+    //   try {
+    //     await transaction.commit();
+    //   } catch (err) {
+    //     await transaction.rollback();
+    //     throw err;
+    //   }
+    // }
     const logs = [];
     const _log = m => Array.prototype.push.apply(logs, m);
     for (let i = 0; i < instances.length; i += 1) {
@@ -449,13 +449,13 @@ function beforeBulkUpdateAssociation(target, model, association, key) {
     if (isSetter(options)) {
       return;
     }
-    let transaction;
+    // let transaction;
     if (instances === null) {
-      if (!options.transaction) {
-        transaction = await scope.sequelize.transaction();
-        options.transaction = transaction;
-        utils.setTriggerParams(options, getGlobalKey(target, scope.as), { transaction });
-      }
+      // if (!options.transaction) {
+      //   transaction = await scope.sequelize.transaction();
+      //   options.transaction = transaction;
+      //   utils.setTriggerParams(options, getGlobalKey(target, scope.as), { transaction });
+      // }
       instances = await utils.getBulkedInstances(target, options);
       _.each(instances, (instance) => {
         _.each(options.attributes, (value, key) => {
@@ -487,15 +487,15 @@ function afterBulkUpdateAssociation(target, as, log) {
     if (instances === null) {
       instances = await utils.getBulkedInstances(target, options);
     }
-    const { transaction } = utils.getTriggerParams(options, getGlobalKey(target, as));
-    if (transaction) {
-      try {
-        await transaction.commit();
-      } catch (err) {
-        await transaction.rollback();
-        throw err;
-      }
-    }
+    // const { transaction } = utils.getTriggerParams(options, getGlobalKey(target, as));
+    // if (transaction) {
+    //   try {
+    //     await transaction.commit();
+    //   } catch (err) {
+    //     await transaction.rollback();
+    //     throw err;
+    //   }
+    // }
     const { cache } = utils.getTriggerParams(options, getScopeKey(target, options, as));
     const logs = [];
     for (let i = 0; i < instances.length; i += 1) {
@@ -534,11 +534,11 @@ function beforeNonThroughSetter(model, association) {
   return async function wrappedBeforeNonThroughSetter(self, values, options) {
     const isRemove = isRemoveSetter(options);
     const isAdd = isAddSetter(options);
-    if (!options.transaction) {
-      const transaction = await scope.sequelize.transaction();
-      options.transaction = transaction;
-      utils.setTriggerParams(options, getGlobalKey(model, scope.as), { transaction });
-    }
+    // if (!options.transaction) {
+    //   const transaction = await scope.sequelize.transaction();
+    //   options.transaction = transaction;
+    //   utils.setTriggerParams(options, getGlobalKey(model, scope.as), { transaction });
+    // }
     const { target, foreignKey } = scope;
     let before = await scope.get(self.id, options.transaction, true);
     if (!_.isArray(before)) {
@@ -600,15 +600,15 @@ function beforeNonThroughSetter(model, association) {
 
 function afterNonThroughSetter(model, as, log) {
   return async function wrappedAfterBulkUpdateAssociation(self, values, options) {
-    const { transaction } = utils.getTriggerParams(options, getGlobalKey(model, as));
-    if (transaction) {
-      try {
-        await transaction.commit();
-      } catch (err) {
-        await transaction.rollback();
-        throw err;
-      }
-    }
+    // const { transaction } = utils.getTriggerParams(options, getGlobalKey(model, as));
+    // if (transaction) {
+    //   try {
+    //     await transaction.commit();
+    //   } catch (err) {
+    //     await transaction.rollback();
+    //     throw err;
+    //   }
+    // }
     const { cache, instances } = utils.getTriggerParams(options, getScopeKey(model, options, as));
     const logs = [];
     for (let i = 0; i < instances.length; i += 1) {
@@ -645,11 +645,11 @@ function afterNonThroughSetter(model, as, log) {
 function beforeThroughSetter(model, association) {
   const scope = getScope(model, association);
   return async function wrappedBeforeThroughSetter(self, value, options) {
-    if (!options.transaction) {
-      const transaction = await scope.sequelize.transaction();
-      options.transaction = transaction;
-      utils.setTriggerParams(options, getGlobalKey(model, scope.as), { transaction });
-    }
+    // if (!options.transaction) {
+    //   const transaction = await scope.sequelize.transaction();
+    //   options.transaction = transaction;
+    //   utils.setTriggerParams(options, getGlobalKey(model, scope.as), { transaction });
+    // }
     const trackingKey = getTrackingKey(model, options, scope.as);
     start(trackingKey);
     const before = {};
@@ -662,21 +662,21 @@ function beforeThroughSetter(model, association) {
 
 function afterThroughSetter(model, as, log) {
   return async function wrappedAfterThroughSetter(self, value, options) {
-    const { transaction } = utils.getTriggerParams(options, getGlobalKey(model, as));
+    // const { transaction } = utils.getTriggerParams(options, getGlobalKey(model, as));
     const { before, trackingKey, scope } = utils.getTriggerParams(
       options,
       getScopeKey(model, options, as),
     );
     const after = {};
     after[as] = await scope.get(self.id, options.transaction);
-    if (transaction) {
-      try {
-        await transaction.commit();
-      } catch (err) {
-        await transaction.rollback();
-        throw err;
-      }
-    }
+    // if (transaction) {
+    //   try {
+    //     await transaction.commit();
+    //   } catch (err) {
+    //     await transaction.rollback();
+    //     throw err;
+    //   }
+    // }
     await log([{
       type: 'UPDATE',
       reference: `${scope.name}-${self.id}`,
@@ -703,11 +703,11 @@ function beforeUpdateThroughAssociation(model, association, target, pairedAssoci
     if (isSetter(options)) {
       return;
     }
-    if (!options.transaction) {
-      const transaction = await scope.sequelize.transaction();
-      options.transaction = transaction;
-      utils.setTriggerParams(options, getGlobalKey(model, scope.as), { transaction });
-    }
+    // if (!options.transaction) {
+    //   const transaction = await scope.sequelize.transaction();
+    //   options.transaction = transaction;
+    //   utils.setTriggerParams(options, getGlobalKey(model, scope.as), { transaction });
+    // }
     if (instances === null) {
       instances = await utils.getBulkedInstances(model, options);
     } else if (!_.isArray(instances)) {
@@ -742,7 +742,7 @@ function afterUpdateThroughAssociation(model, log, as) {
     if (isSetter(options)) {
       return;
     }
-    const { transaction, targets } = utils.getTriggerParams(options, getGlobalKey(model, as));
+    const { targets } = utils.getTriggerParams(options, getGlobalKey(model, as));
     const logs = [];
     for (let i = 0; i < targets.length; i += 1) {
       setScopeKey(model, options, i, as);
@@ -766,14 +766,14 @@ function afterUpdateThroughAssociation(model, log, as) {
         userId: options.user.id,
       });
     }
-    if (transaction) {
-      try {
-        await transaction.commit();
-      } catch (err) {
-        await transaction.rollback();
-        throw err;
-      }
-    }
+    // if (transaction) {
+    //   try {
+    //     await transaction.commit();
+    //   } catch (err) {
+    //     await transaction.rollback();
+    //     throw err;
+    //   }
+    // }
     if (logs.length) {
       await log(logs, options);
     }
