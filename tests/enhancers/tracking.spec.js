@@ -89,7 +89,7 @@ describe('enhancers', () => {
         data: {
           id: 1,
           type: 'user',
-          before: {},
+          before: { username: '' },
           after: { username: TEST(1) },
         },
         userId: 2,
@@ -108,7 +108,7 @@ describe('enhancers', () => {
         data: {
           id: 2,
           type: 'user',
-          before: {},
+          before: { username: '' },
           after: { username: TEST(2) },
         },
         userId: 2,
@@ -118,7 +118,7 @@ describe('enhancers', () => {
         data: {
           id: 3,
           type: 'user',
-          before: {},
+          before: { username: '' },
           after: { username: TEST(2) },
         },
         userId: 2,
