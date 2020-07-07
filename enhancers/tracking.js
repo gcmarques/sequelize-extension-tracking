@@ -5,10 +5,13 @@ const inflection = require('inflection');
 let utils;
 
 function changed(instance) {
+  let changes;
   if (instance.changedWithVirtuals) {
-    return instance.changedWithVirtuals();
+    changes = instance.changedWithVirtuals();
+  } else {
+    changes = instance.changed();
   }
-  return instance.changed();
+  return changes || [];
 }
 
 function start(trackingKey) {
