@@ -4,12 +4,12 @@ const inflection = require('inflection');
 
 let utils;
 
-function changed(instance) {
+async function changed(instance) {
   let changes;
   if (instance.changedWithVirtuals) {
-    changes = instance.changedWithVirtuals();
+    changes = await instance.changedWithVirtuals();
   } else {
-    changes = instance.changed();
+    changes = await instance.changed();
   }
   return changes || [];
 }
@@ -167,7 +167,7 @@ function getScope(model, association) {
 
 async function _wrappedBeforeUpdate(self, options, model) {
   const created = !self.id;
-  const changes = changed(self);
+  const changes = await changed(self);
   const trigger = utils.getTriggerType(options);
   const destroyed = trigger === 'DESTROY' || trigger === 'BULKDESTROY';
   if (changes.length || created || destroyed) {
@@ -366,7 +366,7 @@ async function track(id, _instance, changes, state, scope, cache, transaction) {
 
 async function _wrappedBeforeUpdateAssociation(self, options, model, key, scope, cache, target) {
   const created = !self.id;
-  const changes = changed(self);
+  const changes = await changed(self);
   const trigger = utils.getTriggerType(options);
   const destroyed = trigger === 'DESTROY' || trigger === 'BULKDESTROY';
 
